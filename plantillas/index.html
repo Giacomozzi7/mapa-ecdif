@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+
+    <title>Resultado</title>
+</head>
+<body>
+    <p align="center" style="font-size:200%;" ></p>
+    <h1 align = center>Ruta del vehiculo</h1>
+    <div id='mapa' style="width: 2540; height: 1000px;" ></div>
+    <script>
+    //se inicializa el mapa de leaflet dentro del div mapid, se ajusta el zoom
+        var map = L.map('mapa').
+            setView([0,0],2);
+
+            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+            maxZoom: 18
+            }).addTo(map);
+
+            //funcion encargada de recibir las coordenadas y dibujarlas con polyline
+            function Mapa(Coordenadas){
+                console.log(Coordenadas);
+                var polyline=L.polyline(Coordenadas,{color:'red'}).addTo(map);
+                map.fitBounds(polyline.getBounds());
+
+            };
+
+            function Marcadores(coord,PM){
+                  for (var i=0; i<coord.length; i++){
+                        var lat = coord[i][0];
+                        var lon = coord[i][1];
+                        var pm = PM[i];
+
+                        var markerLocation = new L.LatLng(lat, lon);
+                        var marker = new L.Marker(markerLocation);
+                        marker.bindPopup("Alerta de PM10 <br> PM ="+PM[i].toString());
+                        map.addLayer(marker);
+
+                      }
+                    }
+    //Cuando se cargue la pagina se ejecutan las funciones
+    window.onload = Mapa({{aCoord}});Marcadores({{aCoordMax}},{{aPm}});
+    </script>
+
+</body>
+</html>
